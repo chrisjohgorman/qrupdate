@@ -37,7 +37,4 @@ check() {
 
 package() {
   DESTDIR="$pkgdir" cmake --install build
-#FIXME find way to do this in the source code
-#  cd "$pkgdir"/usr/lib/cmake/
-#  mv qrupdate qrupdate64
 }

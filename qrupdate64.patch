@@ -1,0 +1,65 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 180a93b..5344481 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -60,17 +60,17 @@ WRITE_BASIC_PACKAGE_VERSION_FILE(
+ INSTALL(EXPORT qrupdatetargets
+         FILE qrupdateTargets.cmake
+         NAMESPACE qrupdate::
+-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/qrupdate
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/qrupdate64
+ )
+ 
+ CONFIGURE_FILE(qrupdate-config.cmake.in qrupdate-config.cmake @ONLY)
+ INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/qrupdate-config.cmake"
+               "${CMAKE_CURRENT_BINARY_DIR}/qrupdateConfigVersion.cmake"
+-              DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/qrupdate
++              DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/qrupdate64
+         )
+ 
+-CONFIGURE_FILE(qrupdate.pc.in qrupdate.pc @ONLY)
+-INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/qrupdate.pc"
++CONFIGURE_FILE(qrupdate.pc.in qrupdate64.pc @ONLY)
++INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/qrupdate64.pc"
+               DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+ 
+ MESSAGE(STATUS "------------ Build Information --------------")
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index f933071..d631b70 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -76,15 +76,15 @@ SET(SRC
+ )
+ 
+ IF (TARGET lapack_missing) 
+-	ADD_LIBRARY(qrupdate ${SRC} $<TARGET_OBJECTS:lapack_missing>) 
++	ADD_LIBRARY(qrupdate64 ${SRC} $<TARGET_OBJECTS:lapack_missing>) 
+ ELSE()
+-	ADD_LIBRARY(qrupdate ${SRC})
++	ADD_LIBRARY(qrupdate64 ${SRC})
+ ENDIF()
+-TARGET_LINK_LIBRARIES(qrupdate ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+-SET_PROPERTY(TARGET qrupdate PROPERTY VERSION ${PROJECT_VERSION})
+-SET_PROPERTY(TARGET qrupdate PROPERTY SOVERSION ${PROJECT_VERSION_MAJOR})
++TARGET_LINK_LIBRARIES(qrupdate64 ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
++SET_PROPERTY(TARGET qrupdate64 PROPERTY VERSION ${PROJECT_VERSION})
++SET_PROPERTY(TARGET qrupdate64 PROPERTY SOVERSION ${PROJECT_VERSION_MAJOR})
+ 
+-INSTALL(TARGETS qrupdate
++INSTALL(TARGETS qrupdate64
+         EXPORT  qrupdatetargets
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index dd27d30..2b1e11f 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -61,7 +61,7 @@ ENDIF()
+ 
+ FOREACH(TEST_CODE ${TEST_PRGM})
+     ADD_EXECUTABLE(${TEST_CODE} ${TEST_CODE}.f)
+-    TARGET_LINK_LIBRARIES(${TEST_CODE} utils qrupdate )
++    TARGET_LINK_LIBRARIES(${TEST_CODE} utils qrupdate64 )
+     IF ( CMAKE_CROSSCOMPILING )
+         IF ( CMAKE_SYSTEM_NAME MATCHES Windows)
+             ADD_TEST(NAME test_${TEST_CODE} COMMAND ${WINE} ${CMAKE_CURRENT_BINARY_DIR}/${TEST_CODE}${CMAKE_EXECUTABLE_SUFFIX})
